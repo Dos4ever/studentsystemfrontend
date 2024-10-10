@@ -1,47 +1,45 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { Paper } from '@mui/material';
-import { styled } from '@mui/system';
+import { Container, Paper, Button } from '@mui/material';
 
-const StyledContainer = styled('div')(({ theme }) => ({
-  padding: theme.spacing(2),
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-  marginTop: theme.spacing(4),
-}));
+
 
 export default function Student() {
-  const [name, setName] = React.useState('');
-  const [address, setAddress] = React.useState('');
+  const paperStyle ={padding: "50px 20px", width:600, margin: "20px auto"}
+  const [name, setName] = React.useState('Yasser');
+  const [address, setAddress] = React.useState('HH');
+  const handelClick =(e)=>{
+    e.preventDefault()
+    const Student = {name, address}
+    console.log(Student)
+    fetch("https://localhost:8080/student/add", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(Student)
+    }).then(()=> {
+      console.log("New Student added")
+    })
+  }
 
   return (
-    <StyledContainer>
-      <Paper elevation={3} style={{ padding: '20px' }}>
+
+    <Container>
+      <Paper elevation={3} style={paperStyle}>
         <h1 style={{ color: 'blue' }}>Add Student</h1>
-        <Box
-          component="form"
-          sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}
-          noValidate
-          autoComplete="off"
-        >
-          <TextField
-            id="outlined-basic-1"
-            label="Student Name"
-            variant="outlined"
-            fullWidth
+       
+       <form>
+          <TextField id="outlined-basic" label="Student Name" sx={{ paddingBottom: 2 }} variant="outlined" fullWidth
             value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <TextField
-            id="outlined-basic-2"
-            label="Student Address"
-            variant="outlined"
-            fullWidth
+            onChange={(e) => setName(e.target.value)} />
+          <TextField id="outlined-basic" label="Student Address" variant="outlined" fullWidth
             value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
-        </Box>
+            onChange={(e) => setAddress(e.target.value)} />
+
+          <Button color="secondary" variant="contained" onClick={handelClick}>Submit</Button>
+        </form> 
+        {name}
+        {address}
       </Paper>
-    </StyledContainer>
+      </Container>
   );
 }
